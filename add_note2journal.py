@@ -1,4 +1,6 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from datetime import date, datetime, timedelta
 import argparse
 import json
@@ -31,7 +33,8 @@ def is_valid_date(text):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description=u'Adds note to notebook "Дневник", uses template note')
+    parser = argparse.ArgumentParser(
+        description=u'Adds note to notebook "Дневник", uses template note')
     parser.add_argument('date',
                         nargs='?',
                         type=is_valid_date,
@@ -42,7 +45,7 @@ if __name__ == '__main__':
 
     client = EvernoteClient(
         token=config.EVERNOTE_PERSONAL_TOKEN,
-        sandbox=True # Default: True
+        sandbox=True  # Default: True
     )
     noteStore = client.get_note_store()
 
@@ -54,11 +57,12 @@ if __name__ == '__main__':
     print('Title Context is:')
     print(json.dumps(context, ensure_ascii=False, indent=4))
 
-    new_note = noteStore.copyNote(config.JOURNAL_TEMPLATE_NOTE_GUID, config.JOURNAL_NOTEBOOK_GUID)
+    new_note = noteStore.copyNote(
+        config.JOURNAL_TEMPLATE_NOTE_GUID, config.JOURNAL_NOTEBOOK_GUID)
     utitle_without_comment = new_note.title.decode('utf8').split('#', 1)[0]
     utitle = utitle_without_comment.strip().format(**context)
     new_note.title = utitle.encode('utf8')
     noteStore.updateNote(new_note)
-    
+
     print(u'Note created: %s' % utitle)
     print('Done')
